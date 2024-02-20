@@ -13,7 +13,7 @@ javac ./src/*.java
 - Run the client
 
 ```
-java src.Client <hostname>
+java src.Client <hostname> <#packets>
 ```
 
 _If hostname is localhost, a local server will be started and tested._
