@@ -21,15 +21,6 @@ public class LocalServer extends Thread {
                 DatagramPacket dp = new DatagramPacket(buf, buf.length);
                 socket.receive(dp);
 
-                // get ip address
-                int j = 4;
-                StringBuilder ipAddress = new StringBuilder();
-                for (byte raw : dp.getAddress().getAddress()) {
-                    ipAddress.append(raw & 0xFF);
-                    if (--j > 0)
-                        ipAddress.append(".");
-                }
-
                 if (Math.random() > losschance) {
                     int timewait = (int) (Math.random() * seed);
                     Thread.sleep(timewait);
