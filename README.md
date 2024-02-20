@@ -1,4 +1,4 @@
-# Java Pinger
+# Ping
 
 The famous ping command implemented in Java. This version uses UDP instead of ICMP protocol.
 
