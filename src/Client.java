@@ -5,41 +5,55 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.Random;
 
 /*
  *** non-local test ***
  * 
- * change port=10001
- * java src.Client 10 52.43.121.77
+ * java src.Client 52.43.121.77:10001 10
  * 
  * it is an udp echo server
  */
 
 public class Client {
-    private static int port = 10001; // usual UDP echo port is 7
+    private static Integer port;
     private static int timeout = 3000; // milliseconds
     private static DatagramSocket socket;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        if (args.length != 2) {
-            System.out.println("Usage: java src.Client <hostname> <#packets>");
-            return;
-        }
-        int numpackets = Integer.parseInt(args[1]);
-        InetAddress address = InetAddress.getByName(args[0]);
-        socket = new DatagramSocket();
-        socket.setSoTimeout(timeout);
+        try {
+            if (args.length != 2)
+                throw new IndexOutOfBoundsException();
+            String[] result = args[0].split(":");
+            InetAddress address = InetAddress.getByName(result[0]);
+            port = Integer.parseInt(result[1]);
+            if (port < 0 || port > 65535)
+                throw new NumberFormatException();
+            int numpackets = Integer.parseInt(args[1]);
 
-        if (address.isLoopbackAddress()) {
-            System.out.println("\nStarting local server...");
-            LocalServer server = new LocalServer(numpackets);
-            server.start();
-            ping(address, numpackets);
-            server.join();
-        } else
-            ping(address, numpackets);
-        socket.close();
+            socket = new DatagramSocket();
+            socket.setSoTimeout(timeout);
+
+            if (address.isLoopbackAddress()) {
+                System.out.println("\nStarting local server on port " + port + "...");
+                LocalServer server = new LocalServer(port, numpackets);
+                server.start();
+                ping(address, numpackets);
+                server.join();
+            } else
+                ping(address, numpackets);
+            socket.close();
+        } catch (UnknownHostException e) {
+            System.err.println("Error - Host provided could not be found.");
+        } catch (IndexOutOfBoundsException e) {
+            System.err.println("Usage: java src.Client <hostname>:<port> <#packets>");
+        } catch (NumberFormatException e) {
+            if (port == null)
+                System.err.println("Error - Port is an integer in range 0-65535.");
+            else
+                System.err.println("Error - Second argument must be an integer.");
+        }
     }
 
     private static void ping(InetAddress address, int numpackets) throws IOException {
@@ -69,11 +83,11 @@ public class Client {
                 System.out.println(
                         "UDP - " + buf.length + " bytes from " + address.getHostName() + ": RTT=" + RTT + "ms");
             } catch (SocketTimeoutException so) {
-                System.out.println("TimeoutException: failed ping attempt");
+                System.err.println("TimeoutException: failed ping attempt");
             }
         }
         if (countreceived == 0) {
-            System.out.println("Server is unreachable.");
+            System.err.println("Server is unreachable.");
             return;
         }
         float averageRTT = RTTcumulative / countreceived;

@@ -5,14 +5,15 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 public class LocalServer extends Thread {
+    private int port;
     private int numpackets;
 
-    public LocalServer(int numpackets) {
+    public LocalServer(int port, int numpackets) {
+        this.port = port;
         this.numpackets = numpackets;
     }
 
     public void run() {
-        int port = 10001; // usual UDP echo port is 7
         int seed = 1000; // milliseconds
         double losschance = 0.2;
         try (DatagramSocket socket = new DatagramSocket(port)) {
