@@ -1,6 +1,6 @@
 # Ping
 
-The famous ping command implemented in Java. This version uses UDP instead of ICMP protocol.
+The famous UNIX command ping implemented in Java. This version uses UDP instead of ICMP protocol.
 
 ## Usage
 
@@ -16,4 +16,5 @@ javac ./src/*.java
 java src.Client <hostname>:<port> <#packets>
 ```
 
-_If hostname is localhost, a local server will be started and tested._
+> [!IMPORTANT]
+> If hostname is _localhost_, a local server will be started and tested.
