@@ -5,8 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 public class LocalServer extends Thread {
-    private int port;
-    private int numpackets;
+    private int port, numpackets;
 
     public LocalServer(int port, int numpackets) {
         this.port = port;

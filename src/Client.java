@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
 import java.util.Random;
 
 /*
- *** non-local test ***
+ *** online test ***
  * 
  * java src.Client 52.43.121.77:10001 10
  * 
@@ -17,7 +17,7 @@ import java.util.Random;
  */
 
 public class Client {
-    private static Integer port;
+    private static Integer port, numpackets;
     private static int timeout = 3000; // milliseconds
     private static DatagramSocket socket;
 
@@ -28,9 +28,13 @@ public class Client {
             String[] result = args[0].split(":");
             InetAddress address = InetAddress.getByName(result[0]);
             port = Integer.parseInt(result[1]);
-            if (port < 0 || port > 65535)
+            if (port < 0 || port > 65535) {
+                port = null;
                 throw new NumberFormatException();
-            int numpackets = Integer.parseInt(args[1]);
+            }
+            numpackets = Integer.parseInt(args[1]);
+            if (numpackets <= 0)
+                throw new NumberFormatException();
 
             socket = new DatagramSocket();
             socket.setSoTimeout(timeout);
@@ -45,14 +49,14 @@ public class Client {
                 ping(address, numpackets);
             socket.close();
         } catch (UnknownHostException e) {
-            System.err.println("Error - Host provided could not be found.");
+            System.err.println("ERROR - host could not be found.");
         } catch (IndexOutOfBoundsException e) {
             System.err.println("Usage: java src.Client <hostname>:<port> <#packets>");
         } catch (NumberFormatException e) {
             if (port == null)
-                System.err.println("Error - Port is an integer in range 0-65535.");
+                System.err.println("ERROR - port must be an integer [0-65535]");
             else
-                System.err.println("Error - Second argument must be an integer.");
+                System.err.println("ERROR - second argument must be a positive integer.");
         }
     }
 
@@ -83,7 +87,7 @@ public class Client {
                 System.out.println(
                         "UDP - " + buf.length + " bytes from " + address.getHostName() + ": RTT=" + RTT + "ms");
             } catch (SocketTimeoutException so) {
-                System.err.println("TimeoutException: failed ping attempt");
+                System.err.println("Failed attempt.");
             }
         }
         if (countreceived == 0) {
