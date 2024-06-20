@@ -1,6 +1,6 @@
 # Ping
 
-The famous UNIX command ping implemented in Java. This version uses UDP instead of ICMP protocol.
+This version of ping uses UDP instead of the original's ICMP protocol.
 
 ## Usage
 
