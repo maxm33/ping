@@ -50,6 +50,8 @@ public class Client {
             socket.close();
         } catch (UnknownHostException e) {
             System.err.println("ERROR - host could not be found.");
+        } catch (SecurityException e) {
+            System.err.println("ERROR - operation not allowed by host.");
         } catch (IndexOutOfBoundsException e) {
             System.err.println("Usage: java src.Client <hostname>:<port> <#packets>");
         } catch (NumberFormatException e) {
