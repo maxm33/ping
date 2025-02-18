@@ -5,13 +5,16 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 public class LocalServer extends Thread {
-    private int port, numpackets;
+    private final int port;
+    private final int numpackets;
 
     public LocalServer(int port, int numpackets) {
         this.port = port;
         this.numpackets = numpackets;
     }
 
+    @Override
+    @SuppressWarnings("CallToPrintStackTrace")
     public void run() {
         int seed = 1000; // milliseconds
         double losschance = 0.2;

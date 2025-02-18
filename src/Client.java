@@ -18,7 +18,7 @@ import java.util.Random;
 
 public class Client {
     private static Integer port, numpackets;
-    private static int timeout = 3000; // milliseconds
+    private static final int timeout = 3000; // milliseconds
     private static DatagramSocket socket;
 
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -27,12 +27,12 @@ public class Client {
                 throw new IndexOutOfBoundsException();
             String[] result = args[0].split(":");
             InetAddress address = InetAddress.getByName(result[0]);
-            port = Integer.parseInt(result[1]);
+            port = Integer.valueOf(result[1]);
             if (port < 0 || port > 65535) {
                 port = null;
                 throw new NumberFormatException();
             }
-            numpackets = Integer.parseInt(args[1]);
+            numpackets = Integer.valueOf(args[1]);
             if (numpackets <= 0)
                 throw new NumberFormatException();
 
@@ -63,8 +63,8 @@ public class Client {
     }
 
     private static void ping(InetAddress address, int numpackets) throws IOException {
-        long timeStart = 0, timeEnd = 0;
-        int countreceived = 0, RTT = 0, RTTcumulative = 0, minRTT = 9999, maxRTT = 0;
+        long timeStart, timeEnd;
+        int countreceived = 0, RTT, RTTcumulative = 0, minRTT = 9999, maxRTT = 0;
         Random rd = new Random();
 
         System.out.println("\n");
