@@ -87,7 +87,7 @@ public class Client {
                 if (RTT < minRTT)
                     minRTT = RTT;
                 System.out.println(
-                        "UDP - " + buf.length + " bytes from " + address.getHostName() + ": RTT=" + RTT + "ms");
+                        "UDP - " + dp.getLength() + " bytes from " + address.getHostName() + ": RTT=" + RTT + "ms");
             } catch (SocketTimeoutException so) {
                 System.err.println("Failed attempt.");
             }
